@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Index Page</title>
+    </head>
+    <body>
+    {% if latest_original_text_list %}
+        <ul>
+        {% for original_text in latest_original_text_list %}
+            <li><a href="/translations/{{ original_text.id }}/">{{ original_text.text }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No original texts are available.</p>
+    {% endif %}
+    </body>
+</html>
