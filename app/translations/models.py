@@ -1,17 +1,30 @@
 import uuid
 from django.db import models
 
-class Users(models.Model):
+class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, blank=True)
     email = models.CharField(max_length=100)
+    created_datetime = models.DateTimeField("date created", auto_now_add=True)
+    last_updated_datetime = models.DateTimeField("date created", auto_now=True)
+    def __str__(self):
+        return self.email
 
-class Original_Texts(models.Model):
+class Original_Text(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
-    original_text = models.CharField(max_length=10000)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=10000)
+    created_datetime = models.DateTimeField("date created", auto_now_add=True)
+    last_updated_datetime = models.DateTimeField("date created", auto_now=True)
+    def __str__(self):
+        return self.text
 
-class Translated_Texts(models.Model):
+class Translated_Text(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
-    translated_text = models.CharField(max_length=10000)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    original_text_id = models.ForeignKey(Original_Text, on_delete=models.CASCADE)
+    text = models.CharField(max_length=10000)
+    created_datetime = models.DateTimeField("date created", auto_now_add=True)
+    last_updated_datetime = models.DateTimeField("date created", auto_now=True)
+    def __str__(self):
+        return self.text
