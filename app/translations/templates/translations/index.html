@@ -5,14 +5,15 @@
         <title>Index Page</title>
     </head>
     <body>
+    <h3 class="details">過去の翻訳リクエスト</h3>
     {% if latest_original_text_list %}
         <ul>
         {% for original_text in latest_original_text_list %}
-            <li><a href="/translations/{{ original_text.id }}/">{{ original_text.text }}</a></li>
+            <li><a href="{% url 'translations:detail' original_text.id %}">{{ original_text.text }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
-        <p>No original texts are available.</p>
+        <p>過去の翻訳リクエストがありません。</p>
     {% endif %}
     </body>
 </html>
