@@ -2,10 +2,19 @@ from django.shortcuts import get_object_or_404, render
 
 from .models import Original_Text
 
+from .forms import OriginalTextForm
+
 
 def index(request):
+    form = OriginalTextForm
+
+    if request.method == 'POST':
+        form = OriginalTextForm(request.POST)
+        if form.is_valid():
+            form.save()
+
     latest_original_text_list = Original_Text.objects.order_by("-last_updated_datetime")[:5]
-    context = {"latest_original_text_list": latest_original_text_list}
+    context = {'form': form, "latest_original_text_list": latest_original_text_list}
     return render(request, "translations/index.html", context)
 
 def detail(request, original_text_id):

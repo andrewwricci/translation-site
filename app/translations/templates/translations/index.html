@@ -5,7 +5,19 @@
         <title>Index Page</title>
     </head>
     <body>
-    <h3 class="details">過去の翻訳リクエスト</h3>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>新しい翻訳リクエストを追加</h3>
+                    <form action="{% url 'translations:index' %}" method='POST'>
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button type="submit" class="btn btn-primary btn-sm" value=""> Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <h3 class="details">過去の翻訳リクエスト</h3>
     {% if latest_original_text_list %}
         <ul>
         {% for original_text in latest_original_text_list %}

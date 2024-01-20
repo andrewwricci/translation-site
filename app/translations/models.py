@@ -14,6 +14,8 @@ class Original_Text(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.CharField(max_length=10000)
+    # add extra info for context
+    # add image
     created_datetime = models.DateTimeField("date created", auto_now_add=True)
     last_updated_datetime = models.DateTimeField("date created", auto_now=True)
     def __str__(self):
