@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Original_Text
@@ -9,10 +10,16 @@ def index(request):
     original_text_form = OriginalTextForm
 
     # allow users to change the status of original text while in 受付待ち or 下書き state
-    latest_original_text_list = Original_Text.objects.order_by("-last_updated_datetime")[:5]
+    latest_original_text_list = Original_Text.objects.order_by("-last_updated_datetime")
+    paginator = Paginator(latest_original_text_list, 5)
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'original_text_form': original_text_form, 
-        "latest_original_text_list": latest_original_text_list
+        'latest_original_text_list': latest_original_text_list,
+        "page_obj": page_obj
         }
     return render(request, "translations/index.html", context)
 
