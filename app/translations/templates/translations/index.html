@@ -9,9 +9,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3>新しい翻訳リクエストを追加</h3>
-                    <form action="{% url 'translations:index' %}" method='POST'>
+                    <form action="{% url 'translations:add-original-text' %}" method='POST'>
                         {% csrf_token %}
-                        {{form.as_p}}
+                        {{original_text_form.as_p}}
                         <button type="submit" class="btn btn-primary btn-sm" value=""> Save</button>
                     </form>
                 </div>

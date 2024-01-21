@@ -16,6 +16,7 @@ class Original_Text(models.Model):
     text = models.CharField(max_length=10000)
     # add extra info for context
     # add image
+    # add status (下書き、受付待ち、翻訳中、翻訳済みなど)
     created_datetime = models.DateTimeField("date created", auto_now_add=True)
     last_updated_datetime = models.DateTimeField("date created", auto_now=True)
     def __str__(self):
