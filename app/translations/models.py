@@ -1,5 +1,7 @@
+import datetime
 import uuid
 from django.db import models
+from django.utils import timezone
 
 class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -27,6 +29,9 @@ class Original_Text(models.Model):
     last_updated_datetime = models.DateTimeField("date created", auto_now=True)
     def __str__(self):
         return self.text
+    def was_published_recently(self):
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.created_datetime <= now
 
 class Translated_Text(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
