@@ -10,7 +10,8 @@ def index(request):
     original_text_form = OriginalTextForm
 
     # allow users to change the status of original text while in 受付待ち or 下書き state
-    latest_original_text_list = Original_Text.objects.order_by("-last_updated_datetime")
+    original_text_list = Original_Text.objects.filter(user_id=request.user)
+    latest_original_text_list = original_text_list.order_by("-last_updated_datetime")
     paginator = Paginator(latest_original_text_list, 5)
 
     page_number = request.GET.get("page")
@@ -24,7 +25,7 @@ def index(request):
     return render(request, "translations/index.html", context)
 
 def detail(request, original_text_id):
-    original_text = get_object_or_404(Original_Text, pk=original_text_id)
+    original_text = get_object_or_404(Original_Text, pk=original_text_id, user_id=request.user)
     return render(request, "translations/detail.html", {"original_text": original_text})
 
 def addOriginalText(request):
@@ -33,6 +34,7 @@ def addOriginalText(request):
     if request.method == 'POST':
         form = OriginalTextForm(request.POST)
         if form.is_valid():
+            form.instance.user_id = request.user
             form.save()
     return redirect('translations:index')
 

@@ -9,6 +9,7 @@
   </form>
 {% else %}
   <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a>
+  <p><a href="{% url 'login' %}">Log In</a></p>
+  <p><a href="{% url 'accounts:signup' %}">Sign Up</a></p>
 {% endif %}
 {% endblock %}

@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-esu538^k_wen7a=6b02erpp=-(@t9c^itq^imr$s4=8-olodn8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 LOGIN_REDIRECT_URL = 'translations:index'
 
