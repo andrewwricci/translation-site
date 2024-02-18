@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Update Page</title>
+    </head>
+    <body>
+        <form action="{% url 'translations:original-text-update' original_text.id %}" method='POST'>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-sm" value="">Update</button>
+        </form>
+    </body>
+</html>

@@ -5,6 +5,12 @@
         <title>Details Page</title>
     </head>
     <body>
+        <!-- ステータスが下書き・対応待ちでない時にUpdate表示させない -->
+        <a href="{% url 'translations:original-text-update' original_text.id %}">Update</a>
+        <form action="{% url 'translations:original-text-delete' original_text.id %}" method='POST'>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm" value="">Delete</button>
+        </form>
         <h1>{{ original_text.text }}</h1>
         <h2>{{ original_text.extra_info }}</h2>
         <ul>

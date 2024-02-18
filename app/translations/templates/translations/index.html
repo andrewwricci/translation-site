@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3>新しい翻訳リクエストを追加</h3>
-                    <form action="{% url 'translations:add-original-text' %}" method='POST'>
+                    <form action="{% url 'translations:original-text-add' %}" method='POST'>
                         {% csrf_token %}
                         {{original_text_form.as_p}}
                         <button type="submit" class="btn btn-primary btn-sm" value=""> Save</button>
@@ -22,7 +22,15 @@
     {% if page_obj %}
         <ul>
         {% for original_text in page_obj %}
-            <li>ステータス: {{ original_text.get_status_display }} <a href="{% url 'translations:detail' original_text.id %}">{{ original_text.text }}</a></li>
+            <li>ステータス: {{ original_text.get_status_display }} 
+                <a href="{% url 'translations:original-text-detail' original_text.id %}">{{ original_text.text }}</a>
+                <!-- ステータスが下書き・対応待ちでない時にUpdate表示させない -->
+                <a href="{% url 'translations:original-text-update' original_text.id %}">Update</a>
+                <form action="{% url 'translations:original-text-delete' original_text.id %}" method='POST'>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm" value="">Delete</button>
+                </form>
+            </li>
         {% endfor %}
         </ul>
         <div class="pagination">
