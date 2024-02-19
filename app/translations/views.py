@@ -7,11 +7,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .models import Original_Text
 
-from .forms import OriginalTextForm
+from .forms import OriginalTextExistingUserForm
 
 
 def index(request):
-    original_text_form = OriginalTextForm
+    original_text_form = OriginalTextExistingUserForm
 
     # allow users to change the status of original text while in 受付待ち or 下書き state
     original_text_list = Original_Text.objects.filter(user_id=request.user)
@@ -35,7 +35,7 @@ class OriginalTextDetail(LoginRequiredMixin, DetailView):
         return super().get_queryset().filter(user_id=self.request.user)
 
 class OriginalTextCreate(LoginRequiredMixin, CreateView):
-    form_class = OriginalTextForm
+    form_class = OriginalTextExistingUserForm
     success_url = reverse_lazy("translations:index")
 
     def form_valid(self, form):
@@ -49,12 +49,14 @@ class OriginalTextDelete(LoginRequiredMixin, DeleteView):
 # ステータスが下書き・対応待ちでない時にUpdateできないようにする
 class OriginalTextUpdate(LoginRequiredMixin, UpdateView):
     model = Original_Text
-    form_class = OriginalTextForm
+    form_class = OriginalTextExistingUserForm
     template_name_suffix = '_update_form'
+    # 最終的にdetailページにしたい
+    success_url = reverse_lazy("translations:index")
+
     def get_queryset(self, **kwargs):
         return super().get_queryset().filter(user_id=self.request.user)
+        
     def form_valid(self, form):
         form.instance.user_id = self.request.user
         return super(UpdateView, self).form_valid(form)
-    # 最終的にdetailページにしたい
-    success_url = reverse_lazy("translations:index")

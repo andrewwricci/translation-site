@@ -3,15 +3,6 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
-# class User(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     username = models.CharField(max_length=50, blank=True)
-#     email = models.CharField(max_length=100)
-#     created_datetime = models.DateTimeField("date created", auto_now_add=True)
-#     last_updated_datetime = models.DateTimeField("date created", auto_now=True)
-#     def __str__(self):
-#         return self.email
     
 class Original_Text_Status(models.IntegerChoices):
     DRAFT = 0, "下書き"
