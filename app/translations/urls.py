@@ -6,7 +6,8 @@ app_name = "translations"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("<uuid:original_text_id>/", views.detail, name="detail"),
-    path("add-original-text", views.addOriginalText, name="add-original-text")
-    # path("<int:original_text_id>/results/", views.results, name="results"),
+    path("original-text/<uuid:pk>/", views.OriginalTextDetail.as_view(), name="original-text-detail"),
+    path("original-text/add", views.OriginalTextCreate.as_view(), name="original-text-add"),
+    path("original-text/delete/<uuid:pk>/", views.OriginalTextDelete.as_view(), name="original-text-delete"),
+    path("original-text/update/<uuid:pk>/", views.OriginalTextUpdate.as_view(), name="original-text-update")
 ]
