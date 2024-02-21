@@ -6,6 +6,7 @@
     </head>
     <body>
         <!-- ステータスが下書き・対応待ちでない時にUpdate表示させない -->
+        <a href="{% url 'translations:index' %}">Translations</a>
         <a href="{% url 'translations:original-text-update' original_text.id %}">Update</a>
         <form action="{% url 'translations:original-text-delete' original_text.id %}" method='POST'>
             {% csrf_token %}

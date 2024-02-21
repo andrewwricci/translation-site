@@ -1,5 +1,9 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
+from django.db.models.base import Model as Model
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
@@ -51,12 +55,21 @@ class OriginalTextUpdate(LoginRequiredMixin, UpdateView):
     model = Original_Text
     form_class = OriginalTextExistingUserForm
     template_name_suffix = '_update_form'
-    # 最終的にdetailページにしたい
-    success_url = reverse_lazy("translations:index")
+
+    def get_success_url(self, **kwargs):
+         return reverse_lazy("translations:original-text-detail", kwargs={'pk': self.kwargs['pk']})
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.kwargs = kwargs
+        self.object = self.get_object()
+        if not self.object.is_status_editable():
+            raise PermissionDenied()
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
         return super().get_queryset().filter(user_id=self.request.user)
         
     def form_valid(self, form):
         form.instance.user_id = self.request.user
-        return super(UpdateView, self).form_valid(form)
+        return super(UpdateView, self).form_valid(form) 

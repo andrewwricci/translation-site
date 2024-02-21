@@ -10,6 +10,10 @@ class Original_Text_Status(models.IntegerChoices):
     TRANSLATION_ONGOING = 2, "翻訳中"
     TRANSLATION_COMPLETED = 3, "翻訳済み"
 
+class Original_Text_Editable_Status(models.IntegerChoices):
+    DRAFT = 0, "下書き"
+    WAITING_FOR_ACTION = 1, "対応待ち"
+
 class Original_Text(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -26,7 +30,9 @@ class Original_Text(models.Model):
     def was_published_recently(self):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.created_datetime <= now
-
+    
+    def is_status_editable(self):
+        return self.status in Original_Text_Editable_Status
 
 class Translated_Text(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import Original_Text
+from .models import Original_Text, Original_Text_Status
 
 
 class OriginalTextModelTests(TestCase):
@@ -34,3 +34,13 @@ class OriginalTextModelTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_original_text = Original_Text(created_datetime=time)
         self.assertIs(recent_original_text.was_published_recently(), True)
+
+    def test_is_status_editable_with_editable_status(self):
+        status = int(Original_Text_Status.DRAFT)
+        editable_original_text = Original_Text(status=status)
+        self.assertIs(editable_original_text.is_status_editable(), True)
+
+    def test_is_status_editable_with_uneditable_status(self):
+        status = int(Original_Text_Status.TRANSLATION_ONGOING)
+        uneditable_original_text = Original_Text(status=status)
+        self.assertIs(uneditable_original_text.is_status_editable(), False)
