@@ -6,30 +6,28 @@
     </head>
     <body>
         <p>Hello {{ user.username }}!</p>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>新しい翻訳リクエストを追加</h3>
-                    <form action="{% url 'translations:original-text-add' %}" method='POST'>
-                        {% csrf_token %}
-                        {{original_text_form.as_p}}
-                        <button type="submit" class="btn btn-primary btn-sm" value=""> Save</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <h3 class="details">過去の翻訳リクエスト</h3>
+        <a href="{% url 'translations:original-add' %}">新しい翻訳依頼</a>
+        <h3 class="details">翻訳リクエスト一覧</h3>
     {% if page_obj %}
         <ul>
-        {% for original_text in page_obj %}
-            <li>ステータス: {{ original_text.get_status_display }} 
-                <a href="{% url 'translations:original-text-detail' original_text.id %}">{{ original_text.text }}</a>
-                <!-- ステータスが下書き・対応待ちでない時にUpdate表示させない -->
-                <a href="{% url 'translations:original-text-update' original_text.id %}">Update</a>
-                <form action="{% url 'translations:original-text-delete' original_text.id %}" method='POST'>
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm" value="">Delete</button>
-                </form>
+        {% for original in page_obj %}
+            <li>ステータス: {{ original.get_status_display }} 
+                <a href="{% url 'translations:original-detail' original.id %}">{{ original.text }}</a>
+                {% if original.is_status_editable %}
+                    <a href="{% url 'translations:original-update' original.id %}">Update</a>
+                    <form action="{% url 'translations:original-update-status' original.id %}" method='POST'>
+                        {% csrf_token %}
+                        {% if original.status == editable_status.DRAFT %}
+                            <button type="submit" name="request_translation" class="btn btn-primary btn-sm" value="">翻訳依頼</button>
+                        {% elif original.status == editable_status.WAITING_FOR_ACTION %}
+                            <button type="submit" name="save_as_draft" class="btn btn-primary btn-sm" value="">下書きに戻す</button>
+                        {% endif %}
+                    </form>
+                    <form action="{% url 'translations:original-delete' original.id %}" method='POST'>
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm" value="">削除</button>
+                    </form>
+                {% endif %}
             </li>
         {% endfor %}
         </ul>

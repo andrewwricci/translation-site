@@ -5,9 +5,10 @@ from . import views
 app_name = "translations"
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("original-text/<uuid:pk>/", views.OriginalTextDetail.as_view(), name="original-text-detail"),
-    path("original-text/add", views.OriginalTextCreate.as_view(), name="original-text-add"),
-    path("original-text/delete/<uuid:pk>/", views.OriginalTextDelete.as_view(), name="original-text-delete"),
-    path("original-text/update/<uuid:pk>/", views.OriginalTextUpdate.as_view(), name="original-text-update")
+    path("", views.OriginalListView.as_view(), name="index"),
+    path("original/<uuid:pk>/", views.OriginalDetailView.as_view(), name="original-detail"),
+    path("original/add", views.OriginalCreateView.as_view(), name="original-add"),
+    path("original/delete/<uuid:pk>/", views.OriginalDeleteView.as_view(), name="original-delete"),
+    path("original/update/<uuid:pk>/", views.OriginalUpdateView.as_view(), name="original-update"),
+    path("original/update-status/<uuid:pk>/", views.OriginalUpdateStatusView.as_view(), name="original-update-status")
 ]

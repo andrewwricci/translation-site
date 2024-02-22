@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Original_Text, Translated_Text
+from .models import Original, Translation
 
-admin.site.register(Original_Text)
-admin.site.register(Translated_Text)
+admin.site.register(Original)
+admin.site.register(Translation)

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Details Page</title>
+    </head>
+    <body>
+        <a href="{% url 'translations:index' %}">Translations</a>
+        {% if original.is_status_editable %}
+            <a href="{% url 'translations:original-update' original.id %}">Update</a>
+        {% endif %}
+        <form action="{% url 'translations:original-delete' original.id %}" method='POST'>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm" value="">Delete</button>
+        </form>
+        <h1>{{ original.text }}  ({{ original.get_status_display }})</h1>
+        <h2>{{ original.extra_info }}</h2>
+        <ul>
+        {% for translation in original.translation_set.all %}
+            <div class="box">{{ translation.text }}</div>
+        {% endfor %}
+        </ul>
+    </body>
+</html>
