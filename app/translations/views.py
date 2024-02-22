@@ -1,62 +1,85 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render, redirect
+from django.core.exceptions import PermissionDenied
+from django.db.models.base import Model as Model
 from django.urls import reverse_lazy
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from .models import Original_Text
+from .models import Original, EditableStatus
 
-from .forms import OriginalTextExistingUserForm
+from .forms import OriginalExistingUserForm
 
+def set_status(self):
+    if 'save_as_draft' in self.request.POST:
+        return EditableStatus.DRAFT
+    elif 'request_translation' in self.request.POST:
+        return EditableStatus.WAITING_FOR_ACTION
+    
+class OriginalListView(ListView):
+    paginate_by = 5
+    model = Original
+    template_name="translations/index.html"
 
-def index(request):
-    original_text_form = OriginalTextExistingUserForm
+    def get_queryset(self):
+        return super().get_queryset().filter(user_id=self.request.user).order_by("-last_updated_datetime")
+    
+    def get_context_data(self, **kwargs):
+        context = super(OriginalListView, self).get_context_data(**kwargs)
+        context['editable_status'] = EditableStatus
+        return context
 
-    # allow users to change the status of original text while in 受付待ち or 下書き state
-    original_text_list = Original_Text.objects.filter(user_id=request.user)
-    latest_original_text_list = original_text_list.order_by("-last_updated_datetime")
-    paginator = Paginator(latest_original_text_list, 5)
+class OriginalDetailView(LoginRequiredMixin, DetailView):
+    model = Original
 
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'original_text_form': original_text_form, 
-        'latest_original_text_list': latest_original_text_list,
-        "page_obj": page_obj
-        }
-    return render(request, "translations/index.html", context)
-
-class OriginalTextDetail(LoginRequiredMixin, DetailView):
-    model = Original_Text
-
-    def get_queryset(self, **kwargs):
+    def get_queryset(self):
         return super().get_queryset().filter(user_id=self.request.user)
 
-class OriginalTextCreate(LoginRequiredMixin, CreateView):
-    form_class = OriginalTextExistingUserForm
+class OriginalCreateView(LoginRequiredMixin, CreateView):
+    model = Original
+    form_class = OriginalExistingUserForm
     success_url = reverse_lazy("translations:index")
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
+        form.instance.status = set_status(self)
         return super(CreateView, self).form_valid(form)
     
-class OriginalTextDelete(LoginRequiredMixin, DeleteView):
-    model = Original_Text
+class OriginalDeleteView(LoginRequiredMixin, DeleteView):
+    model = Original
     success_url = reverse_lazy("translations:index")
 
-# ステータスが下書き・対応待ちでない時にUpdateできないようにする
-class OriginalTextUpdate(LoginRequiredMixin, UpdateView):
-    model = Original_Text
-    form_class = OriginalTextExistingUserForm
+    def get_queryset(self):
+        return super().get_queryset().filter(user_id=self.request.user)
+
+class OriginalUpdateStatusView(LoginRequiredMixin, UpdateView):
+    model = Original
+    fields = []
+    success_url = reverse_lazy("translations:index")
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_id=self.request.user)
+
+    def form_valid(self, form):
+        form.instance.status = set_status(self)
+        return super(UpdateView, self).form_valid(form)
+
+class OriginalUpdateView(LoginRequiredMixin, UpdateView):
+    model = Original
+    form_class = OriginalExistingUserForm
     template_name_suffix = '_update_form'
-    # 最終的にdetailページにしたい
     success_url = reverse_lazy("translations:index")
 
-    def get_queryset(self, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not self.object.is_status_editable():
+            raise PermissionDenied()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
         return super().get_queryset().filter(user_id=self.request.user)
         
     def form_valid(self, form):
-        form.instance.user_id = self.request.user
-        return super(UpdateView, self).form_valid(form)
+        form.instance.status = set_status(self)
+        return super(UpdateView, self).form_valid(form) 

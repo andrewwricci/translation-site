@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Update Page</title>
+    </head>
+    <body>
+        <form action="{% url 'translations:original-update' original.id %}" method='POST'>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="save_as_draft" class="btn btn-primary btn-sm" value="">下書き保存</button>
+            <button type="submit" name="request_translation" class="btn btn-primary btn-sm" value="">翻訳依頼</button>
+        </form>
+    </body>
+</html>

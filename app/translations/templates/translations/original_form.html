@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Create Original Text Page</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>新しい翻訳リクエストを追加</h3>
+                    <form action="{% url 'translations:original-add' %}" method='POST'>
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" name="save_as_draft" class="btn btn-primary btn-sm" value="">下書き保存</button>
+                        <button type="submit" name="request_translation" class="btn btn-primary btn-sm" value="">翻訳依頼</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
