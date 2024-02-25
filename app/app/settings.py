@@ -34,7 +34,6 @@ LOGIN_REDIRECT_URL = 'translations:index'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
-# AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 
 # Application definition
 
