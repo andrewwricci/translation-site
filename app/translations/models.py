@@ -1,8 +1,10 @@
 import datetime
 import uuid
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+
+User = get_user_model()
     
 class Status(models.IntegerChoices):
     DRAFT = 0, "下書き"
@@ -22,7 +24,7 @@ class Original(models.Model):
     # add image, spreadsheet, video etc
     status = models.IntegerField(default=Status.DRAFT, choices=Status.choices)
     created_datetime = models.DateTimeField("date created", auto_now_add=True)
-    last_updated_datetime = models.DateTimeField("date created", auto_now=True)
+    last_updated_datetime = models.DateTimeField("date updated", auto_now=True)
 
     def __str__(self):
         return self.text

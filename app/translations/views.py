@@ -17,7 +17,7 @@ def set_status(self):
     elif 'request_translation' in self.request.POST:
         return EditableStatus.WAITING_FOR_ACTION
     
-class OriginalListView(ListView):
+class OriginalListView(LoginRequiredMixin, ListView):
     paginate_by = 5
     model = Original
     template_name="translations/index.html"
