@@ -35,17 +35,20 @@ LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+PHONENUMBER_DEFAULT_REGION = 'JP'
+
 # Application definition
 
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
-    'translations.apps.TranslationsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "phonenumber_field",
+    'translations.apps.TranslationsConfig',
 ]
 
 MIDDLEWARE = [
