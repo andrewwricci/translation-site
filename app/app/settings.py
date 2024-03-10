@@ -35,6 +35,10 @@ LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailPhoneAuthBackend'
+]
+
 PHONENUMBER_DEFAULT_REGION = 'JP'
 
 # Application definition

@@ -4,7 +4,7 @@ from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label='Email')
+    username = forms.CharField(label='Email/Phone Number')
 
 class RegisterForm(UserCreationForm):
     password1 = forms.CharField(
