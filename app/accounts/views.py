@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from .forms import LoginForm, RegisterForm
 
 class LoginView(auth_views.LoginView):
-    form_class = LoginForm
+    authentication_form = LoginForm
     template_name = 'accounts/login.html'
 
 class RegisterView(generic.CreateView):
