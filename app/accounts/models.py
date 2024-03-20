@@ -6,8 +6,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 from .managers import CustomUserManager
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(_('email address'), unique=True)
-    phone_number = PhoneNumberField(_('phone number'), blank=True, null=True)
+    email = models.EmailField(unique=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
+    password = models.CharField(max_length=128)
     username = None
 
     objects = CustomUserManager()
