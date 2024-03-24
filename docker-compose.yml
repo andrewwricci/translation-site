@@ -1,18 +1,22 @@
 services:
   db:
-    image: postgres:15.5
+    build:
+      context: .
+      dockerfile: dockerfile-postgres
     ports:
       - "5432:5432"
     volumes:
-      - ~/code/translation-database-data:/var/lib/postgresql/data
-      # Do this with ansible or other deploy software in final version
-      - ./db/init:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      - ~/code/translation-database-data/${ENVNAME}:/var/lib/postgresql/data
+    env_file:
+      - env-files/postgres.env
+      - .env
   app:
     build:
       context: .
-      dockerfile: django-dockerfile
+      dockerfile: dockerfile-django
     ports:
       - "8080:8080"
+    env_file:
+      - env-files/django.env
+      - env-files/postgres.env
+      - .env
