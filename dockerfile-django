@@ -1,6 +1,7 @@
 FROM python:3.12.1
 
 COPY app /app
+# COPY .env /app/.env
 COPY requirements.txt /tmp/requirements.txt
 COPY entrypoint.sh /tmp/entrypoint.sh
 
